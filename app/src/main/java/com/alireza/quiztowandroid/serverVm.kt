@@ -2,30 +2,33 @@ package com.alireza.quiztowandroid
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class serverVm {
+class serverVm :ViewModel(){
     
-    private val apiKey = "1c04e05bce6e626247758d120b372a73"
-    private val method = "flickr.photos.search"
-    private val userId = "34427466731@N01"
-    private val extras = "url_s"
-    private val format = "json"
-    private val nojsoncallback = "1"
-    private val perPage = "100"
-    private val page = "1"
-    
-    
-   // var list: LiveData<List<PhotoX>>
-      
+
+    private val _list = MutableLiveData<List<PhotoX>>()
+    val list:LiveData<List<PhotoX>> = _list
+
     init {
         getDataFromServer()
     }
 
 
     private fun getDataFromServer() : List<PhotoX>? {
+
+         val apiKey = "1c04e05bce6e626247758d120b372a73"
+         val method = "flickr.photos.search"
+         val userId = "34427466731@N01"
+         val extras = "url_s"
+         val format = "json"
+         val nojsoncallback = "1"
+         val perPage = "100"
+         val page = "1"
 
         var lists:List<PhotoX>? = null
         RetrofitFlickr.service.loadSearches(
@@ -41,9 +44,7 @@ class serverVm {
             override fun onResponse(call: Call<Photo>, response: Response<Photo>
             ) {
                 lists = response.body()?.photos?.photo!!
-                lists!!.forEach {
-                    Log.d("Response",it.toString())
-                }
+                _list.postValue(lists!!)
             }
 
             override fun onFailure(call: Call<Photo>, t: Throwable) {

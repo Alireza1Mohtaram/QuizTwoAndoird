@@ -14,6 +14,7 @@ interface FlickrService {
                    @Query("nojsoncallback") nojsoncallback:String ,
                    @Query("per_page") per_page:String ,
                    @Query("page") page:String ):Call<Photo>
+    @GET("rest")
     fun loadSearches(@Query("api_key") api_key:String ,
                    @Query("user_id") user_id:String ,
                    @Query("method") method:String ,
